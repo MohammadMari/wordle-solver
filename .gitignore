@@ -34,3 +34,13 @@
 *.db-shm
 *.db-wal
 *.opendb
+*.ipch
+*.pdb
+*.ipdb
+*.tlog
+*.log
+*.recipe
+*.iobj
+*.ilk
+*.idb
+wordle-solver/.vs/wordle-solver/v16/.suo
