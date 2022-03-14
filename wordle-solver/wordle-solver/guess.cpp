@@ -1,8 +1,8 @@
 #include "guess.h"
+#include "wordList.h"
 #include <iostream>
-#include <stack>
 
-bool guess::guessWord(vector<string> *wordList)
+bool guess::guessWord(wordList *wordList)
 {
 
 	// TODO: Find a better word to guess, a word that doesn't have many repeat charcters and all.
@@ -10,7 +10,7 @@ bool guess::guessWord(vector<string> *wordList)
 	//		 Also a better way to get the green and yellow characters would be nice.
 
 
-	string wordToGuess = wordList->at(rand() % wordList->size());
+	string wordToGuess = wordList->head->word;
 
 	cout << "Guess: " << wordToGuess << endl;
 
@@ -98,7 +98,7 @@ bool guess::guessWord(vector<string> *wordList)
 }
 
 
-void guess::filterList(vector<string>& wordList)
+void guess::filterList(wordList*& list)
 {
 	// TODO: Fix clearing things with repeat letters.
 	//		 Ex. You guess a word with two of the same letters, 
@@ -108,17 +108,19 @@ void guess::filterList(vector<string>& wordList)
 	//first we loop through all the green letters we found
 	for (letterPos green : absoluteLetter)
 	{
-		// we start from the very end of the vector, 
-		// as we remove things, we don't want it to change the index
-		// of the words behind it
-		for (int i = wordList.size() - 1; i > 0; i--) 
+
+		wordStrength* curWordNode = list->head;
+
+		while (curWordNode->child) 
 		{
-			string curWord = wordList.at(i);
+			string curWord = curWordNode->word;
 
 			//some of the lists i've used had weird characters randomly so im making sure that the word is all good.
 			if (curWord.size() < 5)
 			{
-				wordList.erase(wordList.begin() + i);
+				wordStrength* remove = curWordNode;
+				curWordNode = curWordNode->child ? curWordNode->child : curWordNode;
+				list->remove(remove);
 				continue;
 			}
 
@@ -127,21 +129,32 @@ void guess::filterList(vector<string>& wordList)
 			// green pos has an index and a character
 			// we know that this character is for sure in this position
 			// for all words that dont have this charcter in this position, we get rid of.
-			if (green.letter != curLetter) 
-				wordList.erase(wordList.begin() + i);
+			if (green.letter != curLetter)
+			{
+				wordStrength* remove = curWordNode;
+				curWordNode = curWordNode->child ? curWordNode->child : curWordNode;
+				list->remove(remove);
+				continue;
+			}
+			
+			curWordNode = curWordNode->child ? curWordNode->child : curWordNode;
 		}
+		
 	}
 
 	// loop through yellow letters
 	for (letterPos yellow : inWordLetter)
 	{
-		for (int i = wordList.size() - 1; i > 0; i--)
-		{
-			string curWord = wordList.at(i);
+		wordStrength* curWordNode = list->head;
 
+		while (curWordNode->child)
+		{
+			string curWord = curWordNode->word;
 			if (curWord.size() < 5) // get rid of the bad words in our list
 			{
-				wordList.erase(wordList.begin() + i);
+				wordStrength* remove = curWordNode;
+				curWordNode = curWordNode->child ? curWordNode->child : curWordNode;
+				list->remove(remove);
 				continue;
 			}
 
@@ -149,7 +162,9 @@ void guess::filterList(vector<string>& wordList)
 			// here we are getting rid of every word that has that character in the same position
 			if (yellow.letter == curWord.at(yellow.pos))
 			{
-				wordList.erase(wordList.begin() + i);
+				wordStrength* remove = curWordNode;
+				curWordNode = curWordNode->child ? curWordNode->child : curWordNode;
+				list->remove(remove);
 				continue;
 			}
 
@@ -164,35 +179,52 @@ void guess::filterList(vector<string>& wordList)
 			}
 
 			if (!found)
-				wordList.erase(wordList.begin() + i);
+			{
+				wordStrength* remove = curWordNode;
+				curWordNode = curWordNode->child ? curWordNode->child : curWordNode;
+				list->remove(remove);
+				continue;
+			}
+
+			curWordNode = curWordNode->child ? curWordNode->child : curWordNode;
 		}
 	}
 
 
-	// TODO: Has a weird bug where it doesn't always get rid of the letter. fix soon pls.
 	// we loop through all the characters that aren't in this word
 	for (char wrong : wrongLetters)
 	{
-		cout << "Wrong: " << wrong << endl;
-		for (int i = wordList.size() - 1; i > 0; i--)
+		wordStrength* curWordNode = list->head;
+
+		while (curWordNode->child)
 		{
-			string curWord = wordList.at(i);
+			string curWord = curWordNode->word;
 
 			if (curWord.size() < 5) // make sure word is good
 			{
-				wordList.erase(wordList.begin() + i);
+				wordStrength* remove = curWordNode;
+				curWordNode = curWordNode->child ? curWordNode->child : curWordNode;
+				list->remove(remove);
 				continue;
 			}
 
+
+			bool removed = false;
 			// we loop through the word, we check and see if this letter is in the word, if it is, we get rid of it.
 			for (int j = 0; j < curWord.size(); j++)
 			{
 				if (wrong == curWord.at(j))
 				{
-					wordList.erase(wordList.begin() + i);
+					wordStrength* remove = curWordNode;
+					curWordNode = curWordNode->child ? curWordNode->child : curWordNode;
+					list->remove(remove);
+					removed = true;
 					break;
 				}
 			}
+
+			if(!removed)
+				curWordNode = curWordNode->child ? curWordNode->child : curWordNode;
 		}
 	}
 }

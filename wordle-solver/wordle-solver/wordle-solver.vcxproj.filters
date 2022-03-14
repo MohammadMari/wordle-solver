@@ -21,9 +21,21 @@
     <ClCompile Include="guess.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="wordList.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="wordStrength.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="guess.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="wordList.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="wordStrength.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>

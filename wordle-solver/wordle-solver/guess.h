@@ -1,8 +1,10 @@
 #pragma once
 #include <vector>
 #include <string>
+#include "wordList.h"
 
 using namespace std;
+
 
 struct letterPos
 {
@@ -24,6 +26,6 @@ public:
 	vector<letterPos> inWordLetter; // yellow letters
 	vector<char> wrongLetters; // gray letters
 
-	bool guessWord(vector<string>* wordList);
-	void filterList(vector<string>& wordList);
+	bool guessWord(wordList* list);
+	void filterList(wordList*& list);
 };

@@ -141,9 +141,13 @@
   <ItemGroup>
     <ClCompile Include="guess.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="wordList.cpp" />
+    <ClCompile Include="wordStrength.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="guess.h" />
+    <ClInclude Include="wordList.h" />
+    <ClInclude Include="wordStrength.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

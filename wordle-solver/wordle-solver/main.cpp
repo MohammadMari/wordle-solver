@@ -4,10 +4,11 @@
 #include <string>
 #include "guess.h"
 #include "time.h"
+#include "wordList.h"
 
 using namespace std;
 
-
+void addWords(wordList*& list);
 
 int main()
 {
@@ -16,30 +17,40 @@ int main()
 
 	srand(time(NULL));
 
-	// TODO: Make linked list instead 
-	vector<string> wordList;
+	wordList* list = nullptr;
 
-	//we enter all words in the vector
-	while (!wordListFile.eof())
-	{
-		string line;
-		getline(wordListFile, line);
-		wordList.push_back(line);
-	}
-
+	addWords(list);	
 
 	for (int i = 0; i < 7; i++)
 	{
 		guess guessWords;
-		if (guessWords.guessWord(&wordList))
+		if (guessWords.guessWord(list))
 		{
 			cout << "Yay!" << endl;
 			break;
 		}
-		guessWords.filterList(wordList);
+		guessWords.filterList(list);
 	}
 
 
 	wordListFile.close();
 	return 0;
+}
+
+
+void addWords(wordList*& list)
+{
+	ifstream wordListFile;
+	wordListFile.open("5letterwords.txt");
+
+	while (!wordListFile.eof())
+	{
+		string line;
+		getline(wordListFile, line);
+
+		if (!list)
+			list = new wordList(line);
+		else
+			list->push_back(line);
+	}
 }
